@@ -19,7 +19,7 @@ public class Employee extends javax.swing.JFrame
         ConnectDB();
         DisplayCustom();
         DisplayBooking();
-        TableEnregistrer();
+        SaveTable();
     }
     // Création d'une méthode pour se connecter à la base de donnée
     private void ConnectDB() 
@@ -71,7 +71,7 @@ public class Employee extends javax.swing.JFrame
     }
     // Création d'une table d'affichage
 
-private void TableEnregistrer()
+private void SaveTable()
 {
     String [] car = {"Matricule", "Brand", "Model","Type","Year","Price", "Available"};
 
@@ -442,6 +442,11 @@ private void TableEnregistrer()
         jButton5.setText("jButton5");
 
         jButton6.setText("LOG OUT");
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -513,7 +518,7 @@ private void TableEnregistrer()
             pst.executeUpdate();
             con.close();
             JOptionPane.showMessageDialog(null, "Car n° " + txtMA.getText() + " has been added");
-            TableEnregistrer();
+            SaveTable();
         }   
         catch(Exception e)
         {
@@ -562,7 +567,7 @@ private void TableEnregistrer()
             pst.executeUpdate();
             con.close();
             JOptionPane.showMessageDialog(null,txtMA.getText() + " is removed");
-            TableEnregistrer();
+            SaveTable();
         }
         catch(Exception e)
         {
@@ -579,6 +584,10 @@ private void TableEnregistrer()
         txtPR.setText("");
         txtAV.setText("");
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+          
+    }//GEN-LAST:event_jButton6ActionPerformed
 
     /**
      * @param args the command line arguments
