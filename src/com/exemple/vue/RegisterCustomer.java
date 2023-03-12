@@ -3,6 +3,14 @@ package com.exemple.vue;
 import javax.swing.JOptionPane;
 import java.sql.*;
 import javax.swing.table.DefaultTableModel;
+import java.util.Properties;
+import javax.mail.Message;
+
+import javax.mail.Transport;
+import javax.mail.Session;
+import javax.mail.PasswordAuthentication;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 public class RegisterCustomer extends javax.swing.JFrame {
 
@@ -34,9 +42,9 @@ public class RegisterCustomer extends javax.swing.JFrame {
     
     private void SaveTable1()
 {
-    String [] customer = {"Username", "Password", "Surname", "Firstname","phone","email","location", "member"};
+    String [] customer = {"Username", "Password", "Surname", "Firstname","phone","email","location", "member","typemember", "amount"};
 
-    String [] vue = new String[9];
+    String [] vue = new String[12];
 
     DefaultTableModel model = new DefaultTableModel(null,customer);
 
@@ -58,6 +66,8 @@ public class RegisterCustomer extends javax.swing.JFrame {
             vue[5] = rs.getString("email");
             vue[6] = rs.getString("location");
             vue[7] = rs.getString("member");
+            vue[8] = rs.getString("typemember");
+            vue[9] = rs.getString("amount");
             model.addRow(vue);
         }
         // Fermer la connexion à la base de données après la boucle while
@@ -251,8 +261,8 @@ public class RegisterCustomer extends javax.swing.JFrame {
         try
         {
             ConnectDB();
-            pst = con.prepareStatement("INSERT INTO customer(Username,Password,Surname,Firstname,phone,email,location,member)"
-                + "value(?,?,?,?,?,?,?,?)");
+            pst = con.prepareStatement("INSERT INTO customer(Username,Password,Surname,Firstname,phone,email,location,member,typemember,amount)"
+                + "value(?,?,?,?,?,?,?,?,?,?)");
             pst.setString(1, txtuser.getText());
             pst.setString(2, txtpsd.getText());
             pst.setString(3, txtsur.getText());
@@ -261,10 +271,54 @@ public class RegisterCustomer extends javax.swing.JFrame {
             pst.setString(6, txtema.getText());
             pst.setString(7, txtloc.getText());
             pst.setString(8, txtmem.getText());
+            pst.setString(9, txttyp.getText());
+            if("".equals(txttyp.getText()))
+            {
+                pst.setString(10,null);
+            }
+            else switch (txttyp.getText()) {
+                case "PRO" -> pst.setString(10,"10.00");
+                case "PAR" -> pst.setString(10,"5.00");
+                default -> pst.setString(10,null);
+            }
             pst.executeUpdate();
             con.close();
-            JOptionPane.showMessageDialog(null, "Your account has been created, please check your e-mail");
+            JOptionPane.showMessageDialog(null, "Your account has been created, please check your e-mail for verification of your account");
             SaveTable1();
+            
+            // Declaration of variable for sending mail
+            String ToEmail = txtema.getText();
+            String FromEmail = "aras.mohaemre@gmail.com";
+            String FromEmailPassword = "Kzx123klm*";
+            String Subject = "Welcome to Auto-Rental";
+            
+            Properties properties = new Properties();
+            
+            properties.put("mail.smtp.auth","true");
+            properties.put("mail.smtp.starttls.enable","true");
+            properties.put("mail.smtp.host","smtp.gmail.com");
+            properties.put("mail.smtp.port","2525");
+            
+             
+            Session session = Session.getDefaultInstance(properties,new javax.mail.Authenticator(){
+                protected PasswordAuthentication getPasswordAuthentication(){
+                    return new PasswordAuthentication(FromEmail, FromEmailPassword);
+                }
+            
+            });
+            
+            try{
+                MimeMessage message = new MimeMessage(session);
+                message.setFrom(new InternetAddress(FromEmail));
+                message.addRecipient(Message.RecipientType.TO, new InternetAddress(ToEmail));
+                message.setSubject(Subject);
+                message.setText("Welcome "+ txtfir.getText() + ", your account has been approved by our employee."); 
+                Transport.send(message);
+            }
+            catch(Exception ex)
+            {
+                System.out.println(""+ex);
+            }
         }   
         catch(Exception e)
         {
