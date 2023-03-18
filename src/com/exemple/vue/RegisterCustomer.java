@@ -2,13 +2,18 @@ package com.exemple.vue;
 
 import javax.swing.JOptionPane;
 import java.sql.*;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
+
+
 import java.util.Properties;
 import javax.mail.Message;
-
-import javax.mail.Transport;
-import javax.mail.Session;
+import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
@@ -42,7 +47,7 @@ public class RegisterCustomer extends javax.swing.JFrame {
     
     private void SaveTable1()
 {
-    String [] customer = {"Username", "Password", "Surname", "Firstname","phone","email","location", "member","typemember", "amount"};
+    String [] customer = {"Username", "Password", "Surname", "Firstname","phone","email","location", "member","typemember", "amount","qsecurity"};
 
     String [] vue = new String[12];
 
@@ -68,6 +73,7 @@ public class RegisterCustomer extends javax.swing.JFrame {
             vue[7] = rs.getString("member");
             vue[8] = rs.getString("typemember");
             vue[9] = rs.getString("amount");
+            vue[9] = rs.getString("qsecurity");
             model.addRow(vue);
         }
         // Fermer la connexion à la base de données après la boucle while
@@ -111,6 +117,8 @@ public class RegisterCustomer extends javax.swing.JFrame {
         txtloc = new javax.swing.JTextField();
         txtmem = new javax.swing.JTextField();
         txttyp = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
+        txtQuestion = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -157,13 +165,16 @@ public class RegisterCustomer extends javax.swing.JFrame {
             }
         });
 
+        jLabel10.setText("Security Question : What is your favorite animal ?");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtQuestion)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel6)
                         .addGap(70, 70, 70)
@@ -197,12 +208,14 @@ public class RegisterCustomer extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(txtmem, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jButton1)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel9)
-                                .addGap(18, 18, 18)
-                                .addComponent(txttyp, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(jButton1)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(jLabel9)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(txttyp, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jLabel10))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -245,9 +258,13 @@ public class RegisterCustomer extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txttyp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel10)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtQuestion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
                 .addComponent(jButton1)
-                .addContainerGap(32, Short.MAX_VALUE))
+                .addGap(16, 16, 16))
         );
 
         pack();
@@ -260,9 +277,11 @@ public class RegisterCustomer extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try
         {
+            // Methode pour se connecter à la base de donnée
             ConnectDB();
-            pst = con.prepareStatement("INSERT INTO customer(Username,Password,Surname,Firstname,phone,email,location,member,typemember,amount)"
-                + "value(?,?,?,?,?,?,?,?,?,?)");
+            pst = con.prepareStatement("INSERT INTO customer(Username,Password,Surname,Firstname,phone,email,location,member,typemember,amount,qsecurity)"
+                + "value(?,?,?,?,?,?,?,?,?,?,?)");
+            
             pst.setString(1, txtuser.getText());
             pst.setString(2, txtpsd.getText());
             pst.setString(3, txtsur.getText());
@@ -272,58 +291,100 @@ public class RegisterCustomer extends javax.swing.JFrame {
             pst.setString(7, txtloc.getText());
             pst.setString(8, txtmem.getText());
             pst.setString(9, txttyp.getText());
+            
             if("".equals(txttyp.getText()))
             {
-                pst.setString(10,null);
+                pst.setString(10,"0.00");
             }
             else switch (txttyp.getText()) {
                 case "PRO" -> pst.setString(10,"10.00");
                 case "PAR" -> pst.setString(10,"5.00");
-                default -> pst.setString(10,null);
+                default -> pst.setString(10,"0.00");
             }
+            pst.setString(11, txtQuestion.getText());
             pst.executeUpdate();
             con.close();
             JOptionPane.showMessageDialog(null, "Your account has been created, please check your e-mail for verification of your account");
             SaveTable1();
-            
-            // Declaration of variable for sending mail
-            String ToEmail = txtema.getText();
-            String FromEmail = "aras.mohaemre@gmail.com";
-            String FromEmailPassword = "Kzx123klm*";
-            String Subject = "Welcome to Auto-Rental";
-            
-            Properties properties = new Properties();
-            
-            properties.put("mail.smtp.auth","true");
-            properties.put("mail.smtp.starttls.enable","true");
-            properties.put("mail.smtp.host","smtp.gmail.com");
-            properties.put("mail.smtp.port","2525");
-            
-             
-            Session session = Session.getDefaultInstance(properties,new javax.mail.Authenticator(){
-                protected PasswordAuthentication getPasswordAuthentication(){
-                    return new PasswordAuthentication(FromEmail, FromEmailPassword);
+        
+            final String username = "aras.mohaemre@gmail.com";
+            final String password = "xcmlxhkrpglktjde";
+
+            Properties props = new Properties();
+            props.put("mail.smtp.host", "smtp.gmail.com");
+            props.put("mail.smtp.port", "587");
+            props.put("mail.smtp.auth", "true");
+            props.put("mail.smtp.starttls.enable", "true");
+
+            Session session = Session.getInstance(props,
+              new javax.mail.Authenticator() {
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(username, password);
                 }
-            
             });
-            
-            try{
-                MimeMessage message = new MimeMessage(session);
-                message.setFrom(new InternetAddress(FromEmail));
-                message.addRecipient(Message.RecipientType.TO, new InternetAddress(ToEmail));
-                message.setSubject(Subject);
-                message.setText("Welcome "+ txtfir.getText() + ", your account has been approved by our employee."); 
+
+            try {
+
+                Message message = new MimeMessage(session);
+                message.setFrom(new InternetAddress(username));
+                message.setRecipients(
+                  Message.RecipientType.TO,
+                  InternetAddress.parse(txtema.getText())
+                );
+                message.setSubject("Registration Confirmation");
+                message.setText("Dear User,\n\nThank you for registering with us. Your account has been created successfully. Please check your email for verification of your account.\n\nBest regards,\nThe Admin Team");
+
                 Transport.send(message);
+
+                System.out.println("Email sent successfully.");
+
+            } catch (MessagingException e) {
+                throw new RuntimeException(e);
+            } catch(Exception e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(null, e.getMessage());
             }
-            catch(Exception ex)
-            {
-                System.out.println(""+ex);
-            }
-        }   
-        catch(Exception e)
-        {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e.getMessage());
+            
+        
+        /*
+        final String username = "aras.muhammed@outlook.com";
+        final String password = "";
+
+        Properties props = new Properties();
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", "smtp.office365.com");
+        props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.starttls.required", "true");
+        props.put("mail.smtp.ssl.protocols", "TLSv1.2");
+
+        Session session = Session.getInstance(props,
+                new javax.mail.Authenticator() {
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication(username, password);
+                    }
+                });
+
+        try {
+
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(username));
+            message.setRecipients(
+                    Message.RecipientType.TO,
+                    InternetAddress.parse(txtema.getText()));
+            message.setSubject("Registration Confirmation");
+            message.setText("Dear User,\n\nThank you for registering with us. Your account has been created successfully. Please check your email for verification of your account.\n\nBest regards,\nThe Admin Team");
+
+            Transport.send(message);
+
+            System.out.println("E-mail envoyé avec succès.");
+
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
+        */
+        } catch (SQLException ex) {
+            Logger.getLogger(RegisterCustomer.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -355,16 +416,15 @@ public class RegisterCustomer extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new RegisterCustomer().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new RegisterCustomer().setVisible(true);
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -373,6 +433,7 @@ public class RegisterCustomer extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JTextField txtQuestion;
     private javax.swing.JTextField txtema;
     private javax.swing.JTextField txtfir;
     private javax.swing.JTextField txtloc;
