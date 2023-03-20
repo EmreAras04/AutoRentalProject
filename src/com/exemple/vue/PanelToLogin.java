@@ -185,7 +185,7 @@ public class PanelToLogin extends javax.swing.JFrame {
                 rs = pst.executeQuery();
                 if (rs.next())
                 {
-                    Client c = new Client();
+                    customer c = new customer();
                     c.setVisible(true);
                 }
                 else

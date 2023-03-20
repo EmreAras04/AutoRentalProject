@@ -66,7 +66,7 @@ public class Help extends javax.swing.JFrame {
         jLabel4.setText("Password");
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 2, 10)); // NOI18N
-        jLabel2.setText("Please active double Authentfication and create an app password for send an email ");
+        jLabel2.setText("Please active double Authentfication and create an app password for to send an email ");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);

@@ -116,7 +116,7 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Segoe UI" size="10" style="2"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="Please active double Authentfication and create an app password for send an email "/>
+        <Property name="text" type="java.lang.String" value="Please active double Authentfication and create an app password for to send an email "/>
       </Properties>
     </Component>
   </SubComponents>
