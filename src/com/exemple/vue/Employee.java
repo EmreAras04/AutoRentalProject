@@ -282,6 +282,8 @@ private void SaveTable2()
         jLabel25 = new javax.swing.JLabel();
         jLabel26 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
+        jButton6 = new javax.swing.JButton();
+        jLabel29 = new javax.swing.JLabel();
 
         jLabel16.setText("jLabel16");
 
@@ -890,6 +892,15 @@ private void SaveTable2()
             .addGap(0, 50, Short.MAX_VALUE)
         );
 
+        jButton6.setText("LOG OUT");
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
+
+        jLabel29.setText("For Employee");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -897,9 +908,13 @@ private void SaveTable2()
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
+                        .addGap(26, 26, 26)
+                        .addComponent(jLabel29)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 957, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(27, 264, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 61, Short.MAX_VALUE)
+                        .addComponent(jButton6)
+                        .addGap(26, 26, 26))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(191, 191, 191)
                         .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -909,8 +924,17 @@ private void SaveTable2()
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addContainerGap()
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                            .addGap(15, 15, 15)
+                            .addComponent(jButton6)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                        .addGap(16, 16, 16)
+                        .addComponent(jLabel29)))
                 .addGap(18, 18, 18)
                 .addComponent(jTabbedPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 655, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1096,6 +1120,11 @@ private void SaveTable2()
             con.close();
             JOptionPane.showMessageDialog(null,txtFrombook.getText() + " is removed");
             SaveTable2();
+            // Mettre la colonne 'available' à 0 pour la voiture choisie
+                pst = con.prepareStatement("UPDATE car SET available = 1 WHERE carID = ?");
+                pst.setString(1, txtCar.getText());
+                pst.executeUpdate();
+                con.close();
         }
         catch(Exception e)
         {
@@ -1114,9 +1143,11 @@ private void SaveTable2()
             con.close();
             JOptionPane.showMessageDialog(null,txtFromUser.getText() + " is removed");  
             SaveTable1();
+            
         }
         catch(Exception e)
         {
+            JOptionPane.showMessageDialog(null, "Error : Please check if you don't forget something ");
             e.printStackTrace();
         }
     }//GEN-LAST:event_jButton7ActionPerformed
@@ -1166,6 +1197,7 @@ try {
 
     // Mettre à jour le tableau avec les nouvelles données de la base de données
     SaveTable1();
+    JOptionPane.showMessageDialog(this, "Modification has been executed ");
 } catch (SQLException ex) {
     // Afficher l'erreur dans la console
     ex.printStackTrace();
@@ -1229,6 +1261,12 @@ try {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtFromTypeActionPerformed
 
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        this.dispose();
+        PanelToLogin ptl = new PanelToLogin();
+        ptl.setVisible(true);
+    }//GEN-LAST:event_jButton6ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1272,6 +1310,7 @@ try {
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
     private javax.swing.JLabel jLabel1;
@@ -1295,6 +1334,7 @@ try {
     private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel28;
+    private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;

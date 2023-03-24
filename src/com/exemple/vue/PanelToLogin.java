@@ -4,7 +4,9 @@
  */
 package com.exemple.vue;
 
+import java.awt.HeadlessException;
 import java.sql.*;
+import java.util.UUID;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 /**
@@ -168,9 +170,13 @@ public class PanelToLogin extends javax.swing.JFrame {
             ConnectDB();
             String sql = "SELECT * FROM employee WHERE username='"+ TextUser.getText()+"' AND password ='" + jPasswordField1.getText()+"';";
             
+            
             pst = con.prepareStatement(sql);
            
             rs = pst.executeQuery();
+            
+            
+            
             if (rs.next())
             {
                 //JOptionPane.showMessageDialog(null,"Correct");
@@ -192,11 +198,10 @@ public class PanelToLogin extends javax.swing.JFrame {
                 {
                     JOptionPane.showMessageDialog(null,"Incorrect username or password");
                 }
-                
             }
-            
+
         }
-        catch(Exception e)
+        catch( SQLException e)
             {
                     e.printStackTrace();
             }
@@ -211,6 +216,7 @@ rc.setVisible(true);
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
 Help h = new Help();
 h.setVisible(true);
+
     }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
